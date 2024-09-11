@@ -1,13 +1,14 @@
 from Settings.Config import *
 from Settings.Utils import *
 
-import subprocess
-import sys
-import time
-
+try:
+    import sys
+    import time
+except ImportError:
+    module_error()
 
 def ask_choice():
-    choice = input(f"{colorama.Fore.RED}>>{colorama.Fore.RESET}")
+    choice = input(f"{red}>>{reset}")
     return choice
 
 def select_tool(choice):
@@ -22,9 +23,9 @@ def select_tool(choice):
         sys.exit()
     else:
         if choice in choices:
-            start_tool(categories[choice], f"{choices[choice]}.py")
+            start_tool(categories[choice], f"{choices[choice]}")
         elif "0" + choice in choices:
-            start_tool(categories["0" + choice], f"{choices['0' + choice]}.py")
+            start_tool(categories["0" + choice], f"{choices['0' + choice]}")
         else:
             return False
         
@@ -42,11 +43,13 @@ while True:
 
         r = select_tool(choice)
 
+        # break
+
         while not r:
             clear()
             print(banner)
             print(main_menu)
-            print(f"{colorama.Fore.RED}Invalid choice. Please try again.{colorama.Fore.RESET}")
+            print(f"{red}Invalid choice. Please try again.{reset}")
             choice = ask_choice()
             r = select_tool(choice)
 

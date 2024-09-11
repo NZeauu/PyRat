@@ -13,7 +13,7 @@ try:
         raise Exception("""
                         Please run the installation script in a virtual environment.
                         To create a virtual environment, run the following commands:
-                        - python -m venv path/to/venv
+                        - python3 -m venv path/to/venv (Linux) or python -m venv path/to/venv (Windows)
                         - source venv/bin/activate (Linux) or venv\Scripts\\activate (Windows)
                         """)
 
