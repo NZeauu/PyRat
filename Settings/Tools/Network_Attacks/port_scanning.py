@@ -1,5 +1,6 @@
-from Settings.Config import *
 from Settings.Utils import *
+
+print(banner)
 
 try:
     import socket
@@ -7,12 +8,18 @@ try:
 
 except ImportError:
     module_error()
-    exit()
-
-print(banner)
 
 # Function to scan a single port
-def scan_port(ip, port):
+def scan_port(ip: str, port: int) -> str:
+    """Scan a single port on a target IP address
+
+    Args:
+        ip (str): The target IP address
+        port (int): The port to scan
+
+    Returns:
+        str: The result of the scan
+    """
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(0.1)
@@ -27,7 +34,15 @@ def scan_port(ip, port):
         pass
 
 # Function to scan a range of ports
-def scan_ports(ip):
+def scan_ports(ip: str) -> list:
+    """Scan all ports on a target IP address
+
+    Args:
+        ip (str): The target IP address
+
+    Returns:
+        list: A list of open ports
+    """
     open_ports = []
     
     with ThreadPoolExecutor() as executor:
@@ -41,6 +56,8 @@ def scan_ports(ip):
 
 
 def scanner_menu():
+    """Port scanner menu
+    """
     # Make a large header for the port scanner title
     print(f"""{red}
                                                                 ========================================
@@ -48,26 +65,32 @@ def scanner_menu():
                                                                 ========================================          
     {reset}""")
 
-    target = input(f"{red}[{green}+{red}]{white} Enter the target IP address (or Q to quit): {reset}")
 
-    if target == "Q" or target == "q":
-        return
+    while True:
+        target = input(f"{message_start} Enter the target IP address (or Q to quit): {reset}")
+        
+        if target == "Q" or target == "q":
+            return
+        
+        elif validate_ip(target):
+            break
 
-    print(f"{red}[{green}+{red}]{white} Scanning ports on {target}...{reset}")
+    print_message(f"Scanning ports on {target}...")
     open_ports = scan_ports(target)
 
     if len(open_ports) > 0:
-        print(f"{red}[{green}+{red}]{white} Open ports on {target}:{reset}")
+        print_message(f"Open ports on {target}:")
         for port in open_ports:
             print(f"    {port}")
     else:
-        print(f"{red}[{green}+{red}]{white} No open ports found on {target}{reset}")
+        print_message(f"No open ports found on {target}")
 
-    input(f"{red}[{green}+{red}]{white} Press Enter to return to the main menu...{reset}")
+    wait_user()
 
-    
-
-scanner_menu()
-
+try:
+    scanner_menu()
+except Exception as e:
+    print_error(f"An error occurred: {e}")
+    wait_user()
 
 

