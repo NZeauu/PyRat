@@ -39,7 +39,8 @@ while True:
         clear()
 
         print(banner)
-        print(main_menu)
+        # print(main_menu)
+        print_menu()
 
 
         # Check if a new version of the tool is available
@@ -55,7 +56,8 @@ while True:
         while not r:
             clear()
             print(banner)
-            print(main_menu)
+            # print(main_menu)
+            print_menu()
             print_error("Invalid choice. Please try again.")
             choice = ask_choice()
             r = select_tool(choice)

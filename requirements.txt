@@ -1,5 +1,7 @@
 colorama
+terminaltables
 scapy
 ipwhois
 dnspython
 requests
+phonenumbers

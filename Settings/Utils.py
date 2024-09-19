@@ -8,6 +8,7 @@ try:
     import re
     import time
     import requests
+    from terminaltables import SingleTable
 
 except ImportError:
     print(f"An error occurred while trying to import a module.")
@@ -73,6 +74,7 @@ def validate_ip(ip: str) -> bool:
     print_error("Invalid IP address!")
     return False
 
+
 def exit_program():
     """Exit the program.
     """
@@ -105,10 +107,22 @@ def wait_user():
     input(f"{message_start} Press Enter to continue...{reset}")
 
 
+def print_menu():
+    """Print the main menu to the console.
+    """
+    table = SingleTable(table_data)
+    table.justify_columns = {0: 'center', 1: 'center', 2: 'center', 3: 'center', 4: 'center'}
+    print(f"{red}")
+    print(table.table)
+    print(f"{green}[Q]-Exit{reset}\n")
+
+
 def check_for_update():
     """Check for a new version of the tool on GitHub.
     """
     url = "https://raw.githubusercontent.com/NZeauu/PyRat/main/Settings/Config.py"
+
+    print_message("Checking for updates...")
     
     try:
         response = requests.get(url)
@@ -122,7 +136,9 @@ def check_for_update():
             if remote_version != tool_version:
                 print(f"{warning_start} A new version of PyRat is available! Please update to version {remote_version}")
                 print(f"{warning_start} Visit {github_url} to download the latest version.")
-                print("\n")
+
+            else:
+                print_message("PyRat is up to date.")
         
     except requests.exceptions.RequestException as e:
         print_error(f"An error occurred while trying to check for updates: {e}")
@@ -136,6 +152,7 @@ red = colorama.Fore.RED
 green = colorama.Fore.GREEN
 white = colorama.Fore.WHITE
 yellow = colorama.Fore.YELLOW
+blue = colorama.Fore.BLUE
 reset = colorama.Fore.RESET
 bright = colorama.Style.BRIGHT
 reset_all = colorama.Style.RESET_ALL
@@ -148,30 +165,29 @@ banner = f"""{red}
 This tool is for educational purposes only. Do not use it for illegal activities. 
 The author is not responsible for misuse of this tool. By using this tool, you are fully responsible for your actions.
 
-                                                                ██▓███ ▓██   ██▓ ██▀███   ▄▄▄     ▄▄▄█████▓
-                                                                ▓██░  ██▒▒██  ██▒▓██ ▒ ██▒▒████▄   ▓  ██▒ ▓▒
-                                                                ▓██░ ██▓▒ ▒██ ██░▓██ ░▄█ ▒▒██  ▀█▄ ▒ ▓██░ ▒░
-                                                                ▒██▄█▓▒ ▒ ░ ▐██▓░▒██▀▀█▄  ░██▄▄▄▄██░ ▓██▓ ░ 
-                                                                ▒██▒ ░  ░ ░ ██▒▓░░██▓ ▒██▒ ▓█   ▓██▒ ▒██▒ ░ 
-                                                                ▒▓▒░ ░  ░  ██▒▒▒ ░ ▒▓ ░▒▓░ ▒▒   ▓▒█░ ▒ ░░   
-                                                                ░▒ ░     ▓██ ░▒░   ░▒ ░ ▒░  ▒   ▒▒ ░   ░    
-                                                                ░░       ▒ ▒ ░░    ░░   ░   ░   ▒    ░      
-                                                                        ░ ░        ░           ░  ░        
-                                                                        ░ ░                                
+                                                          ███████████             ███████████              █████   
+                                                         ░░███░░░░░███           ░░███░░░░░███            ░░███    
+                                                          ░███    ░███ █████ ████ ░███    ░███   ██████   ███████  
+                                                          ░██████████ ░░███ ░███  ░██████████   ░░░░░███ ░░░███░   
+                                                          ░███░░░░░░   ░███ ░███  ░███░░░░░███   ███████   ░███    
+                                                          ░███         ░███ ░███  ░███    ░███  ███░░███   ░███ ███
+                                                          █████        ░░███████  █████   █████░░████████  ░░█████ 
+                                                         ░░░░░          ░░░░░███ ░░░░░   ░░░░░  ░░░░░░░░    ░░░░░  
+                                                                        ███ ░███                                   
+                                                                       ░░██████                                    
+                                                                        ░░░░░░                                                                                              
                                                                             {green}
                                                                                   v.{tool_version}
                                                                       {white}{github_url}    
-                                    
-         
 {reset}"""
 
 spacing = 40
 
-category_01_text = f"{green}Network Attacks{red}".ljust(spacing)
-category_02_text = f"{green}Web Applications{red}".ljust(spacing)
-category_03_text = f"{green}OSINT{red}".ljust(spacing)
-category_04_text = f"{green}Authentication and Credential{red}".ljust(spacing)
-category_05_text = f"{green}Soon...{red}".ljust(spacing)
+category_01_text = f"{green}Network Attacks{red}"
+category_02_text = f"{green}Web Applications{red}"
+category_03_text = f"{green}OSINT{red}"
+category_04_text = f"{green}Authentication and Credential{red}"
+category_05_text = f"{green}Soon...{red}"
 
 option_01_text = f"{white}[01] - Port Scanning{red}".ljust(spacing)
 option_02_text = f"{white}[02] - ARP Spoofing{red}".ljust(spacing)
@@ -207,25 +223,18 @@ option_25_text = f"{white}[26] - Hash Cracking{red}".ljust(spacing)
 
 option_XX_text = f"{white}[XX] - Soon...{red}".ljust(spacing)
 
-
-main_menu = f"""{red}
-┌────────────────────────────────┬────────────────────────────────┬────────────────────────────────┬────────────────────────────────┬────────────────────────────────┐
-│ {category_01_text            } │ {category_02_text            } │ {category_03_text            } │ {category_04_text            } │ {category_05_text            } │
-├────────────────────────────────┼────────────────────────────────┼────────────────────────────────┼────────────────────────────────┼────────────────────────────────┤
-│ {option_01_text              } │ {option_06_text              } │ {option_15_text              } │ {option_23_text              } │ {option_XX_text              } │
-│ {option_02_text              } │ {option_07_text              } │ {option_16_text              } │ {option_24_text              } │                                │
-│ {option_03_text              } │ {option_08_text              } │ {option_17_text              } │ {option_25_text              } │                                │
-│ {option_04_text              } │ {option_09_text              } │ {option_18_text              } │                                │                                │
-│ {option_05_text              } │ {option_10_text              } │ {option_19_text              } │                                │                                │
-│                                │ {option_11_text              } │ {option_20_text              } │                                │                                │
-│                                │ {option_12_text              } │ {option_21_text              } │                                │                                │
-│                                │ {option_13_text              } │ {option_22_text              } │                                │                                │
-│                                │ {option_14_text              } │                                │                                │                                │
-└────────────────────────────────┴────────────────────────────────┴────────────────────────────────┴────────────────────────────────┴────────────────────────────────┘
-
-{green}[Q]-Exit
-
-{reset}"""
+table_data = [
+    [category_01_text, category_02_text, category_03_text, category_04_text, category_05_text],
+    [option_01_text, option_06_text, option_15_text, option_23_text, option_XX_text],
+    [option_02_text, option_07_text, option_16_text, option_24_text, ""],
+    [option_03_text, option_08_text, option_17_text, option_25_text, ""],
+    [option_04_text, option_09_text, option_18_text, "", ""],
+    [option_05_text, option_10_text, option_19_text, "", ""],
+    ["", option_11_text, option_20_text, "", ""],
+    ["", option_12_text, option_21_text, "", ""],
+    ["", option_13_text, option_22_text, "", ""],
+    ["", option_14_text, "", "", ""]
+]
 
 option_01 = "port_scanning"
 option_02 = "arp_spoofing"
