@@ -4,7 +4,8 @@ print(banner)
 
 try:
     import socket
-    from concurrent.futures import ThreadPoolExecutor
+    import concurrent.futures
+    from tqdm import tqdm
 
 except ImportError:
     module_error()
@@ -45,12 +46,15 @@ def scan_ports(ip: str) -> list:
     """
     open_ports = []
     
-    with ThreadPoolExecutor() as executor:
+    with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = [executor.submit(scan_port, ip, port) for port in range(65535 + 1)]
-        for future in futures:
-            result = future.result()
-            if result:
-                open_ports.append(result)
+
+        with tqdm(total=len(futures), desc="Scanning", unit="port") as pbar:
+            for future in concurrent.futures.as_completed(futures):
+                pbar.update(1)
+                result = future.result()
+                if result:
+                    open_ports.append(result)
     
     return open_ports
 
@@ -79,6 +83,7 @@ def scanner_menu():
     open_ports = scan_ports(target)
 
     if len(open_ports) > 0:
+        print("\n")
         print_message(f"Open ports on {target}:")
         for port in open_ports:
             print(f"    {port}")

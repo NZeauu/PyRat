@@ -2,12 +2,6 @@ from Settings.Utils import *
 
 print(banner)
 
-try:
-    import requests
-
-except ImportError:
-    module_error()
-
 def geolocation(ip: str) -> None:
     """Geolocation tool
 

@@ -74,6 +74,21 @@ def validate_ip(ip: str) -> bool:
     print_error("Invalid IP address!")
     return False
 
+def validate_email(email: str) -> bool:
+    """Validate an email address.
+
+    Args:
+        email (str): The email address to validate.
+
+    Returns:
+        bool: True if the email address is valid, False otherwise.
+    """
+
+    if re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email):
+        return True
+
+    print_error("Invalid email address!")
+    return False
 
 def exit_program():
     """Exit the program.
@@ -213,27 +228,28 @@ option_17_text = f"{white}[17] - Social Media{red}".ljust(spacing)
 option_18_text = f"{white}[18] - Google Dorking{red}".ljust(spacing)
 option_19_text = f"{white}[19] - Metadata Extraction{red}".ljust(spacing)
 option_20_text = f"{white}[20] - Email Lookup{red}".ljust(spacing)
-option_21_text = f"{white}[21] - Phone Number Lookup{red}".ljust(spacing)
-option_22_text = f"{white}[22] - GeoLocation{red}".ljust(spacing)
+option_21_text = f"{white}[21] - Email Tracker{red}".ljust(spacing)
+option_22_text = f"{white}[22] - Phone Number Lookup{red}".ljust(spacing)
+option_23_text = f"{white}[23] - GeoLocation{red}".ljust(spacing)
 
-option_23_text = f"{white}[24] - Phishing{red}".ljust(spacing)
-option_24_text = f"{white}[25] - Brute Force{red}".ljust(spacing)
-option_25_text = f"{white}[26] - Hash Cracking{red}".ljust(spacing)
+option_24_text = f"{white}[24] - Phishing{red}".ljust(spacing)
+option_25_text = f"{white}[25] - Brute Force{red}".ljust(spacing)
+option_26_text = f"{white}[26] - Hash Cracking{red}".ljust(spacing)
 
 
 option_XX_text = f"{white}[XX] - Soon...{red}".ljust(spacing)
 
 table_data = [
     [category_01_text, category_02_text, category_03_text, category_04_text, category_05_text],
-    [option_01_text, option_06_text, option_15_text, option_23_text, option_XX_text],
-    [option_02_text, option_07_text, option_16_text, option_24_text, ""],
-    [option_03_text, option_08_text, option_17_text, option_25_text, ""],
+    [option_01_text, option_06_text, option_15_text, option_24_text, option_XX_text],
+    [option_02_text, option_07_text, option_16_text, option_25_text, ""],
+    [option_03_text, option_08_text, option_17_text, option_26_text, ""],
     [option_04_text, option_09_text, option_18_text, "", ""],
     [option_05_text, option_10_text, option_19_text, "", ""],
     ["", option_11_text, option_20_text, "", ""],
     ["", option_12_text, option_21_text, "", ""],
     ["", option_13_text, option_22_text, "", ""],
-    ["", option_14_text, "", "", ""]
+    ["", option_14_text, option_23_text, "", ""]
 ]
 
 option_01 = "port_scanning"
@@ -260,28 +276,29 @@ option_17 = "social_media"
 option_18 = "google_dorking"
 option_19 = "metadata_extraction"
 option_20 = "email_lookup"
-option_21 = "phone_number_lookup"
-option_22 = "geolocation"
+option_21 = "email_tracker"
+option_22 = "phone_number_lookup"
+option_23 = "geolocation"
 
 
-option_23 = "phishing"
-option_24 = "brute_force"
-option_25 = "hash_cracking"
+option_24 = "phishing"
+option_25 = "brute_force"
+option_26 = "hash_cracking"
 
 option_XX = "soon"
 
 choices = {
     "01": option_01, "02": option_02, "03": option_03, "04": option_04, "05": option_05,
     "06": option_06, "07": option_07, "08": option_08, "09": option_09, "10": option_10, "11": option_11, "12": option_12, "13": option_13, "14": option_14,
-    "15": option_15, "16": option_16, "17": option_17, "18": option_18, "19": option_19, "20": option_20, "21": option_21, "22": option_22,
-    "23": option_23, "24": option_24, "25": option_25,
+    "15": option_15, "16": option_16, "17": option_17, "18": option_18, "19": option_19, "20": option_20, "21": option_21, "22": option_22, "23": option_23,
+    "24": option_24, "25": option_25, "26": option_26,
     "XX": option_XX
 }
 
 categories = {
     "01": "Network_Attacks", "02": "Network_Attacks", "03": "Network_Attacks", "04": "Network_Attacks", "05": "Network_Attacks",
     "06": "Web_Applications", "07": "Web_Applications", "08": "Web_Applications", "09": "Web_Applications", "10": "Web_Applications", "11": "Web_Applications", "12": "Web_Applications", "13": "Web_Applications", "14": "Web_Applications",
-    "15": "OSINT", "16": "OSINT", "17": "OSINT", "18": "OSINT", "19": "OSINT", "20": "OSINT", "21": "OSINT", "22": "OSINT",
-    "23": "Authentication_and_Credential", "24": "Authentication_and_Credential", "25": "Authentication_and_Credential",
+    "15": "OSINT", "16": "OSINT", "17": "OSINT", "18": "OSINT", "19": "OSINT", "20": "OSINT", "21": "OSINT", "22": "OSINT", "23": "OSINT",
+    "24": "Authentication_and_Credential", "25": "Authentication_and_Credential", "26": "Authentication_and_Credential",
     "XX": "Identity_and_Access"
 }

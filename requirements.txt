@@ -5,3 +5,5 @@ ipwhois
 dnspython
 requests
 phonenumbers
+beautifulsoup4
+tqdm
