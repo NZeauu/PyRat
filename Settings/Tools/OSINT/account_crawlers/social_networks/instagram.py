@@ -1,6 +1,6 @@
 from Settings.Utils import *
 
-def instagram(email):
+def instagram(email: str) -> bool | None:
     """Instagram account crawler
     """
     headers = {

@@ -7,3 +7,4 @@ requests
 phonenumbers
 beautifulsoup4
 tqdm
+httpx

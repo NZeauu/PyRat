@@ -1,6 +1,6 @@
 from Settings.Utils import *
 
-def pinterest(email):
+def pinterest(email: str) -> bool | None:
     """Pinterest account crawler
     """
 

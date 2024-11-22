@@ -1,6 +1,6 @@
 from Settings.Utils import *
 
-def twitter(email):
+def twitter(email: str) -> bool | None:
     """Twitter account crawler
     """
     headers = {

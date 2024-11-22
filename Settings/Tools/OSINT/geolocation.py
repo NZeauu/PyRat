@@ -1,7 +1,5 @@
 from Settings.Utils import *
 
-print(banner)
-
 def geolocation(ip: str) -> None:
     """Geolocation tool
 
@@ -35,6 +33,8 @@ def geolocation(ip: str) -> None:
     
 
 def main() -> None:
+    print(banner)
+
     print(f"""{red}
                                                                 ========================================
                                                                 |{green}              Geolocation             {red}|
@@ -52,12 +52,5 @@ def main() -> None:
 
     geolocation(ip)
 
-    wait_user()
-
-
-try:
-    main()
-except Exception as e:
-    print_error(f"An error occurred: {e}")
     wait_user()
 

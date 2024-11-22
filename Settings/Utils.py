@@ -8,8 +8,10 @@ try:
     import re
     import time
     import requests
+    import httpx
     from terminaltables import SingleTable
-
+    import importlib
+    
 except ImportError:
     print(f"An error occurred while trying to import a module.")
     print(f"Please make sure you have all the necessary modules installed using requirements.txt or Setup.py.")
@@ -20,14 +22,13 @@ except ImportError:
 
 tool_path = os.path.dirname(os.path.abspath(__file__)).split("Settings")[0].strip()
 
-
-def clear():
+def clear() -> None:
     """Clear the console screen.
     """
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def start_tool(category: str, tool_name: str):
+def start_tool(category: str, tool_name: str) -> None:
     """Start a tool from the selected category.
 
     Args:
@@ -40,16 +41,25 @@ def start_tool(category: str, tool_name: str):
         print("Soon available...")
         input("Press Enter to continue...")
         return
+    
+    try:
+        # Dynamically import the module using category and tool_name
+        module_path = f"Settings.Tools.{category}.{tool_name}"
+        tool_module = importlib.import_module(module_path)
+        
+        # Get the main function from the module
+        if hasattr(tool_module, 'main'):
+            tool_module.main()
+        else:
+            print_error(f"The main function is not found in {module_path}.")
+    except ModuleNotFoundError:
+        print_error(f"Module {module_path} not found.")
+    except AttributeError as e:
+        print_error(f"Error accessing main function: {e}")
+        
 
-    if sys.platform.startswith('win'):
-        file = f"python -m Settings.Tools.{category}.{tool_name}"
-        subprocess.run(file, shell=True)
-    elif sys.platform.startswith('linux'):
-        file = f"python3 -m Settings.Tools.{category}.{tool_name}"
-        subprocess.run(file, shell=True)
 
-
-def module_error():
+def module_error() -> None:
     """Print an error message when a module is not found.
     """
     print(f"An error occurred while trying to import a module.")
@@ -90,7 +100,17 @@ def validate_email(email: str) -> bool:
     print_error("Invalid email address!")
     return False
 
-def exit_program():
+
+def validate_domain(domain: str) -> bool:
+    if re.match(r"^((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,1}\.(xn--)?([a-z0-9\-]{1,61}|[a-z0-9-]{1,30}\.[a-z]{2,})$", domain):
+        return True
+    elif validate_ip(domain):
+        return True
+    else:
+        return False
+    
+
+def exit_program() -> None:
     """Exit the program.
     """
     clear()
@@ -100,7 +120,7 @@ def exit_program():
     clear()
     sys.exit()
 
-def print_message(message: str):
+def print_message(message: str) -> None:
     """Print a message to the console.
 
     Args:
@@ -108,7 +128,7 @@ def print_message(message: str):
     """
     print(f"{message_start} {message}{reset}")
 
-def print_error(message: str):
+def print_error(message: str) -> None:
     """Print an error message to the console.
 
     Args:
@@ -116,13 +136,13 @@ def print_error(message: str):
     """
     print(f"{error_start} {message}{reset_all}")
 
-def wait_user():
+def wait_user() -> None:
     """Wait for the user to press Enter.
     """
     input(f"{message_start} Press Enter to continue...{reset}")
 
 
-def print_menu():
+def print_menu() -> None:
     """Print the main menu to the console.
     """
     table = SingleTable(table_data)
@@ -132,7 +152,7 @@ def print_menu():
     print(f"{green}[Q]-Exit{reset}\n")
 
 
-def check_for_update():
+def check_for_update() -> None:
     """Check for a new version of the tool on GitHub.
     """
     url = "https://raw.githubusercontent.com/NZeauu/PyRat/main/Settings/Config.py"
@@ -157,6 +177,66 @@ def check_for_update():
         
     except requests.exceptions.RequestException as e:
         print_error(f"An error occurred while trying to check for updates: {e}")
+
+
+def check_modules_updates() -> None:
+    """Check for updates for installed modules listed in requirements.txt (without version specification),
+    and update only outdated ones without printing unnecessary output.
+    """
+    print_message("Checking for updates for the installed modules...")
+
+    try:
+        # Read required module names from requirements.txt
+        with open(f"{tool_path}requirements.txt", "r") as req_file:
+            requirements = [line.strip() for line in req_file if line.strip() and not line.startswith("#")]
+
+        # Get the list of outdated modules
+        result = subprocess.run([sys.executable, "-m", "pip", "list", "--outdated"], capture_output=True, text=True)
+        outdated_modules = {}
+        
+        # Parse pip list --outdated output to get module names and versions
+        for line in result.stdout.splitlines()[2:]:  # Skip headers
+            parts = line.split()
+            if parts and len(parts) >= 2:
+                module_name = parts[0]
+                outdated_modules[module_name] = parts[2]  # New version
+
+        # Identify modules from requirements.txt that are outdated
+        modules_to_update = [module for module in requirements if module in outdated_modules]
+
+        if modules_to_update:
+            print_message("The following modules are outdated and need to be updated. Update them at your own risk.")
+            for module in modules_to_update:
+                print(f"- {module} (new version: {outdated_modules[module]})")
+            
+            choice = input(f"{message_start} Do you want to update the selected modules? [Y/n]: ").strip().lower()
+            if choice in ["n", "no"]:
+                print_message("Selected modules have not been updated.")
+                return
+            elif choice not in ["y", "yes", ""]:
+                print_error("Invalid choice. Selected modules have not been updated.")
+                return
+            # Update only the modules from requirements.txt that are outdated
+            subprocess.run([sys.executable, "-m", "pip", "install", "--upgrade"] + modules_to_update, capture_output=True, text=True)
+            print_message("Selected modules have been updated.")
+        else:
+            print_message("All modules are up to date.")
+
+    except subprocess.CalledProcessError as e:
+        print_error(f"An error occurred while trying to update the modules: {e}")
+    except Exception as e:
+        print_error(f"An unexpected error occurred: {e}")
+
+
+def get_subdomains_wordlists() -> list:
+    """Get the available subdomains wordlists.
+    """
+    return os.listdir(f"{tool_path}Settings/Wordlists/Subdomains/")
+
+def get_directories_wordlists() -> list:
+    """Get the available directories wordlists.
+    """
+    return os.listdir(f"{tool_path}Settings/Wordlists/Directories/")
 
 
 # ======================================================================================================================

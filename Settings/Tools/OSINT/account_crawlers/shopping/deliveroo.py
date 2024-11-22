@@ -1,6 +1,6 @@
 from Settings.Utils import *
 
-def deliveroo(email):
+def deliveroo(email: str) -> bool | None:
     """Deliveroo account crawler
     """
     headers = {
@@ -17,8 +17,8 @@ def deliveroo(email):
     }
 
     try: 
-
-        check = requests.post(
+        client = httpx.Client()
+        check = client.post(
             "https://api.fr.deliveroo.com/consumer/accounts/check-email",
             json=data,
             headers=headers

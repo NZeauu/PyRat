@@ -1,16 +1,16 @@
 from Settings.Utils import *
 
-print(banner)
-
 try:
     from ipwhois import IPWhois
 
 except ImportError:
     module_error()
 
-def whois_lookup():
+def main() -> None:
     """IP Lookup (WhoIs) tool
     """
+    print(banner)
+
     print(f"""{red}
                                                                 ========================================
                                                                 |{green}             IP Lookup (WhoIs)        {red}|
@@ -46,10 +46,4 @@ def whois_lookup():
                 print(f"{red}{key}{reset}: {value}")
 
 
-    wait_user()
-
-try:
-    whois_lookup()
-except Exception as e:
-    print_error(f"An error occurred: {e}")
     wait_user()

@@ -1,7 +1,5 @@
 from Settings.Utils import *
 
-print(banner)
-
 try: 
     import importlib.util
     import concurrent.futures
@@ -13,7 +11,8 @@ except ImportError:
 # Dictionary to store imported modules
 imported_modules = {}
 
-def import_crawlers_scripts(folder=f"{tool_path}Settings/Tools/OSINT/account_crawlers"):
+def import_crawlers_scripts() -> None:
+    folder=f"{tool_path}Settings/Tools/OSINT/account_crawlers"
     try: 
         for root, dirs, files in os.walk(folder):
             for file in files:
@@ -35,7 +34,7 @@ def import_crawlers_scripts(folder=f"{tool_path}Settings/Tools/OSINT/account_cra
         print(f"Error importing scripts: {e}")
         exit(1)
 
-def crawler_function(email):
+def crawler_function(email: str) -> None:
     """Call functions that have the same name as the file they are in in parallel"""
 
     results = {}
@@ -72,7 +71,9 @@ def crawler_function(email):
             print(f"{bright}{red} {key.capitalize()}: {reset_all} An error occurred")
 
 
-def main():
+def main() -> None:
+    print(banner)
+
     print(f"""{red}
                                                                 ========================================
                                                                 |{green}             Email Tracker            {red}|
@@ -92,10 +93,4 @@ def main():
 
     crawler_function(email)
 
-    wait_user()
-
-try:
-    main()
-except Exception as e:
-    print_error(f"An error occurred: {e}")
     wait_user()

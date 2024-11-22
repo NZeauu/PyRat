@@ -1,6 +1,6 @@
 from Settings.Utils import *
 
-def xvideos(email):
+def xvideos(email: str) -> bool | None:
     """Xvideos account crawler
     """
     headers = {

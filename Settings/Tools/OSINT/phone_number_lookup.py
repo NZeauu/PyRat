@@ -1,7 +1,5 @@
 from Settings.Utils import *
 
-print(banner)
-
 try:
     import phonenumbers
     from phonenumbers import geocoder, carrier
@@ -35,6 +33,8 @@ def phone_number_lookup(phone_number: str) -> None:
     
 
 def main() -> None:
+    print(banner)
+
     print(f"""{red}
                                                                 ========================================
                                                                 |{green}          Phone Number Lookup         {red}|
@@ -47,17 +47,17 @@ def main() -> None:
         if phone_number == "Q" or phone_number == "q":
             return
         
-        elif phonenumbers.is_possible_number(phonenumbers.parse(phone_number, None)):
+        elif not phone_number.startswith("+"):
+            print_error("Invalid phone number. Please try again.")
+            continue
+
+        elif not phonenumbers.is_possible_number(phonenumbers.parse(phone_number, None)):
+            print_error("Invalid phone number. Please try again.")
+            continue
+
+        else:
             break
 
     phone_number_lookup(phone_number)
 
-    wait_user()
-
-
-try:
-    main()
-
-except Exception as e:
-    print_error(f"An error occurred: {e}")
     wait_user()

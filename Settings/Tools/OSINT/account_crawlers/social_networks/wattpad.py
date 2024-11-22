@@ -1,6 +1,6 @@
 from Settings.Utils import *
 
-def wattpad(email):
+def wattpad(email: str) -> bool | None:
     """Wattpad account crawler
     """
 

@@ -1,6 +1,6 @@
 from Settings.Utils import *
 
-def plurk(email):
+def plurk(email: str) -> bool | None:
     """Plurk account crawler
     """
 

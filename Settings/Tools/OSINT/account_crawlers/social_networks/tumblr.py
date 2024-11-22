@@ -5,7 +5,7 @@ try:
 except ImportError:
     module_error()
 
-def tumblr(email):
+def tumblr(email: str) -> bool | None:
     """Tumblr account crawler
     """
 

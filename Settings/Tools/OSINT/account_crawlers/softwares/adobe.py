@@ -1,6 +1,6 @@
 from Settings.Utils import *
 
-def adobe(email):
+def adobe(email: str) -> bool | None:
     """Adobe account crawler
     """
     

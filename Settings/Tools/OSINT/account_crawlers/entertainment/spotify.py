@@ -1,6 +1,6 @@
 from Settings.Utils import *
 
-def spotify(email):
+def spotify(email: str) -> bool | None:
     """Spotify account crawler
     """
 
@@ -19,7 +19,8 @@ def spotify(email):
 
 
     try:
-        response = requests.get(
+        client = httpx.Client()
+        response = client.get(
             'https://spclient.wg.spotify.com/signup/public/v1/account',
             headers=headers,
             params=params

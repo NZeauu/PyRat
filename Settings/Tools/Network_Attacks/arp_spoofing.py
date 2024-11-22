@@ -1,7 +1,4 @@
 from Settings.Utils import *
-
-print(banner)
-
 try:
     import scapy.all as scapy
 except ImportError:
@@ -22,7 +19,7 @@ def get_mac(ip: str) -> str:
     answered_list = scapy.srp(arp_request_broadcast, timeout=1, verbose=False)[0]
     return answered_list[0][1].hwsrc
 
-def spoof(target_ip: str, spoof_ip: str):
+def spoof(target_ip: str, spoof_ip: str) -> None:
     """Spoof the ARP table of a target device
 
     Args:
@@ -36,7 +33,7 @@ def spoof(target_ip: str, spoof_ip: str):
 
     scapy.sendp(packet, verbose=False)
 
-def restore(destination_ip: str, source_ip: str):
+def restore(destination_ip: str, source_ip: str) -> None:
     """Restore the ARP table of a target device
 
     Args:
@@ -53,7 +50,7 @@ def restore(destination_ip: str, source_ip: str):
     packet = ether/arp
     scapy.sendp(packet, verbose=False)
 
-def arp_spoof(target_ip: str, gateway_ip: str):
+def arp_spoof(target_ip: str, gateway_ip: str) -> None:
     """ARP spoofing attack
 
     Args:
@@ -78,9 +75,11 @@ def arp_spoof(target_ip: str, gateway_ip: str):
         clear()
         return
     
-def arp_spoof_menu():
+def main() -> None:
     """ARP spoofing menu
     """
+    print(banner)
+
     print(f"""{red}
                                                                 ========================================
                                                                 |{green}             ARP Spoofing             {red}|
@@ -106,10 +105,3 @@ Be sure targets are on the same network as you. ARP Spoofing only works locally.
     
     wait_user()
     return
-
-
-try:
-    arp_spoof_menu()
-except Exception as e:
-    print_error(f"An error occurred: {e}")
-    wait_user()

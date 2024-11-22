@@ -1,6 +1,6 @@
 from Settings.Utils import *
 
-def imgur(email):
+def imgur(email: str) -> bool | None:
     """Imgur account crawler
     """
     headers = {

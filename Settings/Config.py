@@ -2,6 +2,6 @@
 # |                                                  APP CONSTANTS                                                     |
 # ======================================================================================================================
 tool_name = "PyRat"
-tool_version = "1.4.0"
+tool_version = "1.4.1"
 github_url = "https://github.com/NZeauu/PyRat"
 

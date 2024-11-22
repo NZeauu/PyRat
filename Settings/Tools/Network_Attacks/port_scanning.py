@@ -1,7 +1,5 @@
 from Settings.Utils import *
 
-print(banner)
-
 try:
     import socket
     import concurrent.futures
@@ -59,9 +57,10 @@ def scan_ports(ip: str) -> list:
     return open_ports
 
 
-def scanner_menu():
+def main() -> None:
     """Port scanner menu
     """
+    print(banner)
     # Make a large header for the port scanner title
     print(f"""{red}
                                                                 ========================================
@@ -90,12 +89,6 @@ def scanner_menu():
     else:
         print_message(f"No open ports found on {target}")
 
-    wait_user()
-
-try:
-    scanner_menu()
-except Exception as e:
-    print_error(f"An error occurred: {e}")
     wait_user()
 
 

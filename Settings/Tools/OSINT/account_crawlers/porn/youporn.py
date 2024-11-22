@@ -1,6 +1,6 @@
 from Settings.Utils import *
 
-def youporn(email):
+def youporn(email: str) -> bool | None:
     """Youporn account crawler
     """
     headers = {

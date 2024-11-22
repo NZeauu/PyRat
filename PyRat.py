@@ -1,6 +1,9 @@
 from Settings.Config import *
 from Settings.Utils import *
 
+CHECK_UPDATE = False
+BLOCK_MODULE_UPDATE = True
+
 def ask_choice() -> str:
     """Ask the user for a choice
 
@@ -33,30 +36,33 @@ def select_tool(choice: str) -> bool:
         
         return True
     
-
 while True:
     try:
         clear()
 
         print(banner)
-        # print(main_menu)
         print_menu()
 
+        if not CHECK_UPDATE:
+            # Check if a new version of the tool is available
+            check_for_update()
 
-        # Check if a new version of the tool is available
-        check_for_update()
+            # Set the value to True to block the module update check 
+            # NOT RECOMMANDED, ONLY FOR DEBUGGING OR TESTING PURPOSES
+            # DO NOT USE IT IF YOU DON'T KNOW WHAT YOU'RE DOING
+            if not BLOCK_MODULE_UPDATE:
+                # Check if the installed modules are up to date
+                check_modules_updates()
 
+            CHECK_UPDATE = True
 
         choice = ask_choice()
 
         r = select_tool(choice)
 
-        # break
-
         while not r:
             clear()
             print(banner)
-            # print(main_menu)
             print_menu()
             print_error("Invalid choice. Please try again.")
             choice = ask_choice()
@@ -67,5 +73,3 @@ while True:
         print_error(f"An error occurred: {e}")
         wait_user()
         exit()
-    except KeyboardInterrupt:
-        exit_program()

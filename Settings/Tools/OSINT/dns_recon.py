@@ -1,7 +1,5 @@
 from Settings.Utils import *
 
-print(banner)
-
 try:
     import dns.resolver
 
@@ -23,7 +21,7 @@ def validate_domain(domain: str) -> bool:
 
     return True
 
-def get_dns_record(domain: str):
+def get_dns_record(domain: str) -> None:
     """Get the DNS records for a domain
 
     Args:
@@ -62,9 +60,11 @@ def get_dns_record(domain: str):
             pass
         
 
-def dns_recon_menu():
+def main() -> None:
     """The main menu for the DNS Recon tool
     """
+    print(banner)
+
     print(f"""{red}
                                                                 ========================================
                                                                 |{green}             DNS Recon                {red}|
@@ -81,11 +81,4 @@ def dns_recon_menu():
             break
 
     get_dns_record(domain)
-    wait_user()
-
-
-try:
-    dns_recon_menu()
-except Exception as e:
-    print_error(f"An error occurred: {e}")
     wait_user()
